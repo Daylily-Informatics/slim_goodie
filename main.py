@@ -1,5 +1,5 @@
 import sys
-import jwt
+#### import jwt
 import httpx
 import os
 import json
@@ -7,10 +7,10 @@ import subprocess
 #### import shutil
 from typing import List
 from pathlib import Path
-import random
+#### import random
  
-import pandas as pd
-import matplotlib.pyplot as plt
+#### import pandas as pd
+#### import matplotlib.pyplot as plt
 
 from datetime import datetime, timedelta, date
 
@@ -605,4 +605,36 @@ async def user_home(request: Request):
         zebra_printer_version=zebra_printer_version,
         udat=user_data
     )
+    return HTMLResponse(content=content)
+
+
+@app.get("/http_serve_endpoint/{file_path:path}", response_class=FileResponse)
+async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
+    """
+    Serve files from the ./served_data directory, but only after authentication.
+    """
+    root_dir = os.path.abspath("./served_data")
+    full_path = os.path.join(root_dir, file_path)
+
+    # Check if the path is within the served_data directory
+    if not os.path.abspath(full_path).startswith(root_dir):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    # Check if the file exists
+    if not os.path.exists(full_path):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    # Serve the file
+    return FileResponse(full_path)
+
+
+# Middleware for checking authentication
+@app.get("/protected_content", response_class=HTMLResponse)
+async def protected_content(request: Request, auth=Depends(require_auth)):
+    """
+    Example of an endpoint requiring authentication.
+    Once authenticated, users can access protected resources.
+    """
+    # Content accessible to authenticated users only
+    content = "You are authenticated and can access protected resources."
     return HTMLResponse(content=content)
