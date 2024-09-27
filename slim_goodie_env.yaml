@@ -1,0 +1,45 @@
+name: BLOOM
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - cherrypy=18.8.0
+  - ipython=8.18.1
+  - parallel=20230922
+  - pip=23.3.1
+  - postgresql=16.1
+  - psycopg2=2.9.9
+  - cryptography=41.0.7
+  - python=3.12.0
+  - pytz=2023.3.post1
+  - simplejson=3.19.2
+  - sqlalchemy=2.0.23
+  - networkx=3.2.1
+  - matplotlib=3.8.2
+  - jinja2=3.0.3
+  - djlint
+  - pytz
+  - jq
+  - fd-find
+  - rclone
+  - gunicorn
+  - pip:
+    - zebra_day==0.3.4 
+    - fedex_tracking_day==0.2.8
+    - black
+    - uvicorn==0.28.0
+    - fastapi==0.110.0
+    - supabase==2.3.4
+    - python-dotenv==1.0.0
+    - httpx==0.25.2
+    - itsdangerous==2.1.2
+    - pyjwt==2.8.0
+    - python-multipart==0.0.9
+    - nest_asyncio==1.6.0
+    - boto3
+    - botocore
+    - requests_mock
+    - moto
+    - pandas
+    - matplotlib
+prefix: /Users/daylily/miniconda/envs/BLOOM

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        {% set page_title = 'Bloom Login' %}
+        <title>{{ page_title }}</title>
+
+        {% set bloom_mod = 'admin' %}
+
+        <link rel="stylesheet" type="text/css" href="{{ style.skin_css }}"  >
+        <link rel="stylesheet" type="text/css" href="static/style.css">
+<script>
+    function validateEmail(email) {
+        try {
+            const re = /^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email);
+        } catch (error) {
+            console.error("Email validation error:", error);
+            alert('An error occurred during email validation. Please try again.');
+            return false;
+        }
+    }
+
+    function validateForm() {
+        try {
+            var email = document.getElementById('email').value;
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error("Form validation error:", error);
+            document.getElementById('error-message').innerText = 'An error occurred. Please try again.';
+            return false;
+        }
+    }
+
+    function validateFormNoNetwork() {
+        try {
+            var emailwithoutnetwork = document.getElementById('emailwithoutnetwork').value;
+            if (!validateEmail(emailwithoutnetwork)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+            return true;
+        } catch (error) {
+            console.error("Form validation without network error:", error);
+            document.getElementById('error-message-no-network').innerText = 'An error occurred. Please try again.';
+            return false;
+        }
+    }
+
+    function handleGitHubLogin() {
+        try {
+            window.location.href = 'https://kslpzwcmkyrbxqmlhgln.supabase.co/auth/v1/authorize?provider=github&scope=user:email&prompt=select_account';
+        } catch (error) {
+            console.error("GitHub login error:", error);
+            alert('An error occurred while attempting to log in with GitHub. Please try again.');
+        }
+    }
+    
+    function handleGoogleLogin() {
+
+        try {
+            // Update the Supabase authentication URL with your correct IP address and port
+            window.location.href = '{{ supabase_url }}/auth/v1/authorize?provider=google&userinfo.email&prompt=select_account'; // Replace with your actual IP and port
+        } catch (error) {
+            console.error("Google login error:", error);
+            alert('An error occurred while attempting to log in with Google. Please try again.');
+      }
+    }
+</script>
+
+    </head>
+    <body>
+        {% include 'bloom_header.html' %}
+
+        <div id="error-message" style="color: red;"></div> <!-- Error message display -->
+                
+        <div style="width:90%; text-align:center;">
+            <br><br>
+        <button onclick="handleGoogleLogin()">Login with Google</button>
+
+        </div>
+<br><br>
+        <div style="width:100%; text-align:center;">
+        <hr>
+        </div>
+
+
+        <div id="error-message-no-network" style="color: red;"></div> <!-- Error message display for no network form -->
+
+
+
+  
+    </body>
+</html>
