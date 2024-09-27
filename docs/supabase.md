@@ -1,9 +1,9 @@
 # [Supabase](https://supabase.com/) Authentication w/[Social OAuth Providers](https://supabase.com/docs/guides/auth/social-login#:~:text=Set%20up%20a%20social%20provider%20with%20Supabase%20Auth%23)
-Bloom uses [Supabase](https://supabase.com/) for [authentication](https://supabase.com/auth) (_see: [auth docs](https://supabase.com/docs/guides/auth))_. Supabase is an open-source Firebase alternative. It provides a set of tools to build modern apps with features like authentication, real-time subscriptions, and storage. Bloom only leveraging authentication, with google and github both integrated, with [many more supported by supabase](https://supabase.com/docs/guides/auth/social-login#:~:text=Set%20up%20a%20social%20provider%20with%20Supabase%20Auth%23).
+slim_goodie uses [Supabase](https://supabase.com/) for [authentication](https://supabase.com/auth) (_see: [auth docs](https://supabase.com/docs/guides/auth))_. Supabase is an open-source Firebase alternative. It provides a set of tools to build modern apps with features like authentication, real-time subscriptions, and storage. slim_goodie only leveraging authentication, with google and github both integrated, with [many more supported by supabase](https://supabase.com/docs/guides/auth/social-login#:~:text=Set%20up%20a%20social%20provider%20with%20Supabase%20Auth%23).
 
 
 ## Supabase Setup
-To use Supabase, you need to create an account, then set up an organization which you will create a project for bloom specifically. Once you have a project, you will need to get the API URL and the API Key. These will be used in the Bloom configuration file.
+To use Supabase, you need to create an account, then set up an organization which you will create a project for slim_goodie specifically. Once you have a project, you will need to get the API URL and the API Key. These will be used in the slim_goodie configuration file.
 
 ### Step By Step
 1. Create an account on [Supabase](https://supabase.com/).
@@ -16,14 +16,11 @@ To use Supabase, you need to create an account, then set up an organization whic
     SUPABASE_URL=your_project_url
     SUPABASE_KEY=your_project_anon_public_key
     SUPABASE_WHITELIST_DOMAINS=rcrf.org,daylilyinformatics.com,wgrbtb.farm
-    BLOOM_DEWEY_S3_BUCKET_PREFIX=a-prefix-for-your-s3-bucket
     ```
 
     > _note-1: if the `SUPABASE_WHITELIST_DOMAINS` does not exist, or if it is set to '' or to `all`, no whitelist filtering will occur. If a `csv` string of domains, as seen above, is specified, logins are only allowed from those domains._
     
     > _note-2: This .env file is read when the app is hard re-started, not auto restarts._
-
-    > _note-3: The `BLOOM_DEWEY_S3_BUCKET_PREFIX` is used to locate the appropriate buckets for the file manager, [dewey](./dewey.md) to work with. The prefix pattern for all buckets used by dewey is `^([\w-]+)(-)(\d+)$`, ie: `daylily-dewey-0`. Where `$1$2` is the shared prefix for dewey, ie: `daylily-dewey-` buckets and `$3` is an integer which dewey uses to place new files based on if the `euid` in relation to `$3`.  *_this is just a suggestion, no code tries to find files by inferring anything other than the euid encoded in the file name._* This is a simple mechanism to allow rolling to a new S3 bucket when needed. [Learn more in the dewey docs](./dewey.md).
 
 
 6. Return to your project dashboard. There are lots of other settings you can tweak if you like, but the last thing we need to do is enable an auth provider.  In this example, we will enable Google.
@@ -43,10 +40,10 @@ To use Supabase, you need to create an account, then set up an organization whic
      - You might get a warning `OTP expiry exceeds recommended threshold`, which can be ignored for the time being.
    - Click on the `Home` icon in the upper left, which should bring you to the project dashboard. In the upper right of this dashboard will be a status button, which will be yellow if your project is still deploying. Once it is green, you can proceed to the next step. _note: this will appear yellow if the project has been suspended for inactivity.  You will have access to a button to unsuspend the project from this view._
 7. For more extensive config of supabase (ie: only allowing access from certain domains, etc, [please see their docs](https://supabase.com/docs)).
-8. You can now run the bloom UI and test the auth functionality.
+8. You can now run the slim_goodie UI and test the auth functionality.
 
 ## URL Configuration
-If you run bloom on the machine your web browser is running, then there is nothing more for you to do. However, if you are running bloom on a remote server, the `url configuration` must be changed to match the IP specifically used to run bloom remotely. You can not use self shorcuts like `localhost` or `0.0.0.0`, etc.
+If you run slim_goodie on the machine your web browser is running, then there is nothing more for you to do. However, if you are running slim_goodie on a remote server, the `url configuration` must be changed to match the IP specifically used to run slim_goodie remotely. You can not use self shorcuts like `localhost` or `0.0.0.0`, etc.
 So, change this `http://127.0.0.1:3000` to `http://your.ip.address:3000` in the `URL_Configuration` found in the supabase project Authentication settings.
 
 # NOTE ... HTTPS NEEDS TO BE ENABLED ^^^^^ I JUST NOTICED THIS IS USING HTTP :-/

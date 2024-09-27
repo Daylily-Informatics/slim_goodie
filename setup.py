@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="bloom_lims",
-    version="0.10.7",
+    name="slim_goodie",
+    version="0.0.3",
     packages=find_packages(),
     install_requires=[
         # Add dependencies here,
@@ -10,7 +10,6 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "install-bloom=bloom_lims.thing:main",
         ],
     },
 )
