@@ -87,8 +87,6 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import JSONResponse
 from starlette.middleware.sessions import SessionMiddleware
 
-from sqlalchemy.orm.attributes import flag_modified
-from sqlalchemy import func, text
 
 from jinja2 import Environment, FileSystemLoader
 from collections import defaultdict
