@@ -96,6 +96,8 @@ from datetime import datetime, timedelta
 from auth.supabase.connection import create_supabase_client
 
 
+BASE_DIR = Path("./served_data").resolve()  # Base directory for serving files
+
 # local udata prefernces
 UDAT_FILE = "./etc/udat.json"
 # Create if not exists
@@ -608,24 +610,57 @@ async def user_home(request: Request):
     return HTMLResponse(content=content)
 
 
-@app.get("/http_serve_endpoint/{file_path:path}", response_class=FileResponse)
+
+
+
+
+@app.get("/http_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
 async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
     """
-    Serve files from the ./served_data directory, but only after authentication.
+    Serve files and directories from the ./served_data directory, including symbolic links.
     """
-    root_dir = os.path.abspath("./served_data")
-    full_path = os.path.join(root_dir, file_path)
+    requested_path = BASE_DIR / file_path
 
-    # Check if the path is within the served_data directory
-    if not os.path.abspath(full_path).startswith(root_dir):
-        raise HTTPException(status_code=404, detail="File not found")
+    # Check if the requested path exists (whether it's a file, directory, or symlink)
+    if not requested_path.exists():
+        raise HTTPException(status_code=404, detail="File or directory not found")
 
-    # Check if the file exists
-    if not os.path.exists(full_path):
-        raise HTTPException(status_code=404, detail="File not found")
+    # Resolve symlinks to the actual location
+    full_path = requested_path.resolve()
 
-    # Serve the file
-    return FileResponse(full_path)
+    # Ensure the resolved path is either in the base directory or is a symlink pointing outside
+    if not str(full_path).startswith(str(BASE_DIR)) and not requested_path.is_symlink():
+        raise HTTPException(status_code=404, detail="Access to the path is restricted")
+
+    if full_path.is_dir():
+        # If it's a directory (including symlinked directories), list the contents
+        return directory_listing(full_path, file_path)
+    elif full_path.is_file():
+        # If it's a file, serve the file
+        return FileResponse(full_path)
+
+    raise HTTPException(status_code=404, detail="File or directory not found")
+
+
+def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
+    """
+    Generate an HTML response listing the contents of a directory, including symlinked directories.
+    """
+    files = []
+    for item in directory.iterdir():
+        if item.is_dir():
+            # Append '/' to directories, including symbolic link directories
+            files.append(f'<li><a href="/http_serve_endpoint/{file_path}{item.name}/">{item.name}/</a></li>')
+        else:
+            files.append(f'<li><a href="/http_serve_endpoint/{file_path}/{item.name}">{item.name}</a></li>')
+
+    html_content = f"""
+    <h2>Directory listing for: {directory.name}</h2>
+    <ul>
+        {''.join(files)}
+    </ul>
+    """
+    return HTMLResponse(content=html_content)
 
 
 # Middleware for checking authentication
@@ -635,6 +670,5 @@ async def protected_content(request: Request, auth=Depends(require_auth)):
     Example of an endpoint requiring authentication.
     Once authenticated, users can access protected resources.
     """
-    # Content accessible to authenticated users only
     content = "You are authenticated and can access protected resources."
     return HTMLResponse(content=content)
