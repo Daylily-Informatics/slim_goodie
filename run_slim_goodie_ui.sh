@@ -11,7 +11,7 @@ fi
 
 # Check if $1 is null and set host accordingly
 if [ -z "$2" ]; then
-  port="8918"
+  port=8918
 else
  port="$2"
 fi
