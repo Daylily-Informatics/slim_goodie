@@ -609,8 +609,6 @@ async def user_home(request: Request):
     )
     return HTMLResponse(content=content)
 
-
-
 @app.get("/http_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
 async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
     requested_path = BASE_DIR / file_path
@@ -627,48 +625,31 @@ async def serve_files(file_path: str, request: Request, auth=Depends(require_aut
     if full_path.is_dir():
         logging.info(f"Directory path: {full_path}")
         return directory_listing(full_path, file_path)
+    
     elif full_path.is_file():
-        logging.info(f"Serving file: {full_path}")
-        return FileResponse(full_path)
+        # Render .html files
+        if full_path.suffix == '.html':
+            with open(full_path, 'r') as f:
+                content = f.read()
+            return HTMLResponse(content=content)
+        else:
+            # Prompt for download for other file types
+            return FileResponse(full_path, media_type="application/octet-stream", filename=full_path.name)
 
     logging.error(f"File or directory not found after resolution: {full_path}")
     raise HTTPException(status_code=404, detail="File or directory not found")
 
-
-@app.get("/xhttp_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
-async def xserve_files(file_path: str, request: Request, auth=Depends(require_auth)):
-    """
-    Serve files and directories from the ./served_data directory, including symbolic links.
-    """
-    requested_path = BASE_DIR / file_path
-
-    # Check if the requested path exists (whether it's a file, directory, or symlink)
-    if not requested_path.exists():
-        raise HTTPException(status_code=404, detail="File or directory not found")
-
-    # Resolve symlinks to the actual location
-    full_path = requested_path.resolve()
-
-    if full_path.is_dir():
-        # If it's a directory (including symlinked directories), list the contents
-        return directory_listing(full_path, file_path)
-    elif full_path.is_file():
-        # If it's a file, serve the file
-        return FileResponse(full_path)
-
-    raise HTTPException(status_code=404, detail="File or directory not found")
-
-
 def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
     """
-    Generate an HTML response listing the contents of a directory, including symlinked directories.
+    Generate an HTML response listing the contents of a directory, including hidden files and directories.
     """
     files = []
     for item in directory.iterdir():
         if item.is_dir():
-            # Append '/' to directories, including symbolic link directories
+            # Append '/' to directories, including hidden and symbolic link directories
             files.append(f'<li><a href="/http_serve_endpoint/{file_path}{item.name}/">{item.name}/</a></li>')
         else:
+            # Show files, including hidden files
             files.append(f'<li><a href="/http_serve_endpoint/{file_path}/{item.name}">{item.name}</a></li>')
 
     html_content = f"""
@@ -678,6 +659,7 @@ def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
     </ul>
     """
     return HTMLResponse(content=html_content)
+
 
 
 # Middleware for checking authentication
