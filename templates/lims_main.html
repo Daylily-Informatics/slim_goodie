@@ -2,10 +2,10 @@
 <html>
     <head>
 
-        {% set page_title = 'Bloom' %}
+        {% set page_title = 'Slim Goodie RCRF' %}
         <title>{{ page_title }}</title>
         
-        {% set bloom_mod = 'lims' %}
+        {% set slim_goodie_RCRF_mod = 'lims' %}
 
         <link rel="stylesheet" type="text/css" href="{{ style.skin_css }}">
         <link rel="stylesheet" type="text/css" href="static/style.css">
@@ -48,23 +48,23 @@
     </head>
     <body>
 
-        {% include 'bloom_header.html' %}
+        {% include 'slim_goodie_RCRF_header.html' %}
 
         <ul>
 
             <h2>Core</h2>
-            Bloom is an experiment in working with chatGPT to develop a LIMS from scratch. Bloom is meant to be a useful operational system and a tool to help explore the problem space (and guide development in a tighter feedback loop).
+            Slim Goodie RCRF is an experiment in working with chatGPT to develop a LIMS from scratch. Slim Goodie RCRF is meant to be a useful operational system and a tool to help explore the problem space (and guide development in a tighter feedback loop).
             <b><small>Architecture docs will follow, but for now, the following points are worth noting.</small></b>
             <ul>
                 <button class="accordion">...more</button>
                 <div class="panel">
                     <ul>
-                        <li>Bloom provides a model of the core LIMS objects and concepts & a way to mess with the models in near real time.</li>
+                        <li>Slim Goodie RCRF provides a model of the core LIMS objects and concepts & a way to mess with the models in near real time.</li>
                         <li>Provided UIs are functional for base needs. Elaborate for your use cases will need to be developed.</li>
-                        <li>Beyond UIs, even for applications like dashboards, Bloom offers a handful, but complex dashboards are expected to be built with projects like <a href="https://superset.apache.org/">superset</a>.</li>
+                        <li>Beyond UIs, even for applications like dashboards, Slim Goodie RCRF offers a handful, but complex dashboards are expected to be built with projects like <a href="https://superset.apache.org/">superset</a>.</li>
                         <li><a href="/euid_details?euid=AY1">Audit logs</a>, for all details about every object. No data is lost or deleted.</li>
                         <li>Objects each have one EUID.</li>
-                        <li>Barcode printing of EUIDs is EXPECTED by Bloom. Out of the box, Bloom will manage printing to ZPL printers. Printer config can be found in the admin view.</li>
+                        <li>Barcode printing of EUIDs is EXPECTED by Slim Goodie RCRF. Out of the box, Slim Goodie RCRF will manage printing to ZPL printers. Printer config can be found in the admin view.</li>
                         <li>UI does not include highly error-prone operations like: DRAGGING and DROPPING, and discourages manual entry of data.</li>
                         <li>Once a sample is accessioned, all downstream EUID use should be handled by automated systems or scanning.</li>
                         <li>The UI offers the ability to navigate through all objects and their relationships.</li>
@@ -73,14 +73,14 @@
                         <li>ie: containers and the things in containers are modeled independently, as are plates and wset.child_instance.json_addl.get.</li>
                         <li>Oversimplifying the core model to solve for this complexity is, I believe, a core reason most LIMS stink.</li>
                         <li>Development has focused on establishing the feasibility of this approach. Safety nets coming. In the meantime, it is possible to wedge the system (more so in the graph).</li>
-                        <li>Bloom objects all adhere to a common set of interfaces, you can get a sense of this from the <a href="/euid_details?euid=AY1">object detail</a> pages. The entire dataset can be navigated from here.</li>
+                        <li>Slim Goodie RCRF objects all adhere to a common set of interfaces, you can get a sense of this from the <a href="/euid_details?euid=AY1">object detail</a> pages. The entire dataset can be navigated from here.</li>
                         <li>'Batches' or 'sets' of any group of objects may be created, and this batch/set can be used to interact/monitor/etc this batch. (not used by BLOOM, but designed)</li>
-                        <li>Bloom UI is easily skinnable for those needing different color schemes for usability. These can be switched between in the admin view.</li>
+                        <li>Slim Goodie RCRF UI is easily skinnable for those needing different color schemes for usability. These can be switched between in the admin view.</li>
                     </ul>
                 </div>
             </ul>
             <h2><a href="/assays?show_type=accessioning">ACCESSIONING</a></h2>
-            UI design is functionally complete and could serve in production. However, it is demonstrating the finest level of control Bloom offers, and a high throughput scenario would be well advised to aggregate many operations when skinning a lower touch experience.
+            UI design is functionally complete and could serve in production. However, it is demonstrating the finest level of control Slim Goodie RCRF offers, and a high throughput scenario would be well advised to aggregate many operations when skinning a lower touch experience.
             <u>the following works out of the box</u>
             <ul>
                 <button class="accordion">...more</button>
@@ -100,7 +100,7 @@
                 </div>
             </ul>
             <h2><a href="/assays?show_type=assay">ASSAYS / Queues / worksets</a></h2>
-            UI design is functionally complete and could serve in production (with the same caveats described above applying). The two (example assay/queue/workset)'s are not intended for production use. They demonstrate how the Bloom objects can be combined to define types of work, manage this work, and monitor/report.
+            UI design is functionally complete and could serve in production (with the same caveats described above applying). The two (example assay/queue/workset)'s are not intended for production use. They demonstrate how the Slim Goodie RCRF objects can be combined to define types of work, manage this work, and monitor/report.
             <u>the following works out of the box</u>
             <ul>
                 <button class="accordion">...more</button>
@@ -136,17 +136,17 @@
                 <li>Documentation</li>
                 <li>A more formal API</li>
                 <li>Example integration with automation platforms (ie: Hamilton)... this is there, just not exposed as I don't have the automation API to match to.</li>
-                <li>Develop a more complete Assay NGS use case, including integration with downstream data analysis AND looping back to Bloom to produce QC reports which can easily report on various DATA and BLOOM tracked metrics for things like <b><u>BATCH</b></u> monitoring/reports.</li>
-                <li>More user-friendly tools to create new objects and define workflows (Bloom was designed to achieve this eventually).</li>
+                <li>Develop a more complete Assay NGS use case, including integration with downstream data analysis AND looping back to Slim Goodie RCRF to produce QC reports which can easily report on various DATA and BLOOM tracked metrics for things like <b><u>BATCH</b></u> monitoring/reports.</li>
+                <li>More user-friendly tools to create new objects and define workflows (Slim Goodie RCRF was designed to achieve this eventually).</li>
                 <li>More comprehensive COGS tracking.</li>
                 <li>Add in the calculations for all of the operational timing metrics we expect (data is there!).</li>
                 <li>Develop a set of equipment management tools: objects are ready for this.</li>
                 <li>Develop reagent accessioning, lot/and real-time use tools, QC and monitoring tools: objects are ready for this.</li>
             </ul>
-            <h2>Stuff Outside Bloom's Purview</h2>
+            <h2>Stuff Outside Slim Goodie RCRF's Purview</h2>
             <ul>
                 <li>All questions re: deployment, backup, etc. As the system is fully in the user's hands, they can dictate all of these details. FWIW, the core is PostgreSQL, and there are well-established management protocols for queue.child_instance.b_sub_type.</li>
-                <li>Regulatory and Compliance: Bloom can meet any/all regulatory requirements. But, similar to the point above, this depends on how you deploy and manage it. Is it able to comply with CAP/CLIA? 100%.</li>
+                <li>Regulatory and Compliance: Slim Goodie RCRF can meet any/all regulatory requirements. But, similar to the point above, this depends on how you deploy and manage it. Is it able to comply with CAP/CLIA? 100%.</li>
             </ul>
             <h2>Other</h2>
             <ul>
@@ -171,7 +171,7 @@
                 <img src="static/plate_viz.png" alt="plate viz" width="400" height="300">
                 <img src="static/graph_ui.png" alt="graph ui" width="350" height="274">
                 <br>
-                <a href="https://github.com/Daylily-Informatics/bloom_lims">
+                <a href="https://github.com/Daylily-Informatics/slim_goodie_RCRF_lims">
                     <h2>Documentation</h2>
                 </a>
             </ul>
