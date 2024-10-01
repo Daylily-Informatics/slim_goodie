@@ -38,8 +38,7 @@ source bin/install_slim_goodie.sh
 conda activate SLIM_GOODIE
 
 # Start the Slim GoodieUI
-source run_slim_goodie.sh
-
+source run_slim_goodie_ui.sh
 ```
 
 ## Testing
