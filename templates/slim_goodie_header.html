@@ -1,0 +1,46 @@
+<div class="header-container" style="display: flex; align-items: flex-end;">
+    <h1 style="margin: 0 0px; line-height: 1.2;"><a href="/" >slim_goodie</a></h1> 
+    <small style="margin: 0 0px;"><a href="dindex2" >(g)</a></small>
+    <span style="margin: 0 5px;"> /// </span>
+    <small style="margin: 0 5px;">
+        {% if slim_goodie_mod == 'admin' %}
+            <a href="/admin">admin</a>
+        {% elif slim_goodie_mod == 'index' %}
+            
+        {% elif slim_goodie_mod == 'lims' %}
+            <a href="/lims">lims</a>
+        {% elif slim_goodie_mod == 'dewey' %}
+            <a href="/dewey">dewey</a>
+        {% else %}
+            n/a
+        {% endif %}
+    </small>
+    <span style="margin: 0 5px;"> /// </span>
+    <small style="margin: 0 5px;">
+        {% if page_title %}
+            {% if page_title == 'Slim Goodie RCRF' %}
+                 
+            {% else %}
+                {{ page_title }}
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    </small>
+    <span style="margin: 0 5px;"> /// </span>
+        <small>
+            hello 
+            {% if udat and 'email' in udat %}
+                <a href="/user_home" style="margin: 0 5px;">
+                {{ udat['email'] }}
+                </a>
+            {% else %}
+                <a href=login>==> please login <==</a>
+            {% endif %}
+        </small>
+    
+    <span style="margin: 0 5px;"> /// </span>
+    <small style="margin: 0 5px;"><a href="logout">logout</a></small>
+</div>
+<hr>
+
