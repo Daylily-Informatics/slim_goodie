@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "usage: IP:0.0.0.0 PORT:8918 
+echo "usage: IP:0.0.0.0 PORT:8918"
 # Check if $1 is null and set host accordingly
 if [ -z "$1" ]; then
   host="0.0.0.0"
@@ -13,7 +13,7 @@ fi
 if [ -z "$2" ]; then
   port="8918"
 else
-  host="$1"
+ port="$2"
 fi
 
 # Detect the number of CPU cores
