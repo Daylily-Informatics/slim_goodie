@@ -33,10 +33,10 @@ num_workers=$(( (num_cores * 2) - 1 ))
 if [ -z "$3" ]; then
   echo "Running in dev mode with 1 worker on $host"
   sleep 2
-  uvicorn main:app --reload --log-level trace --port $PORT --timeout-keep-alive 303 --host $host
+  uvicorn main:app --reload --log-level trace --port $port --timeout-keep-alive 303 --host $host
 else
   echo "RUNNING IN PRODUCTION MODE"
   echo "Running with $num_workers workers on $host"
   sleep 4
-  gunicorn main:app -w $num_workers -k uvicorn.workers.UvicornWorker --log-level trace --timeout 303 --bind $host:$PORT
+  gunicorn main:app -w $num_workers -k uvicorn.workers.UvicornWorker --log-level trace --timeout 303 --bind $host:$port
 fi
