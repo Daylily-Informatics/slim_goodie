@@ -611,11 +611,32 @@ async def user_home(request: Request):
 
 
 
-
-
-
 @app.get("/http_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
 async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
+    requested_path = BASE_DIR / file_path
+    logging.info(f"Requested path: {requested_path}")
+    
+    if not requested_path.exists():
+        logging.error(f"File or directory not found: {requested_path}")
+        raise HTTPException(status_code=404, detail="File or directory not found")
+
+    # Resolve symlinks to the actual location
+    full_path = requested_path.resolve()
+    logging.info(f"Resolved path: {full_path}")
+    
+    if full_path.is_dir():
+        logging.info(f"Directory path: {full_path}")
+        return directory_listing(full_path, file_path)
+    elif full_path.is_file():
+        logging.info(f"Serving file: {full_path}")
+        return FileResponse(full_path)
+
+    logging.error(f"File or directory not found after resolution: {full_path}")
+    raise HTTPException(status_code=404, detail="File or directory not found")
+
+
+@app.get("/xhttp_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
+async def xserve_files(file_path: str, request: Request, auth=Depends(require_auth)):
     """
     Serve files and directories from the ./served_data directory, including symbolic links.
     """
@@ -627,10 +648,6 @@ async def serve_files(file_path: str, request: Request, auth=Depends(require_aut
 
     # Resolve symlinks to the actual location
     full_path = requested_path.resolve()
-
-    # Ensure the resolved path is either in the base directory or is a symlink pointing outside
-    if not str(full_path).startswith(str(BASE_DIR)) and not requested_path.is_symlink():
-        raise HTTPException(status_code=404, detail="Access to the path is restricted")
 
     if full_path.is_dir():
         # If it's a directory (including symlinked directories), list the contents
