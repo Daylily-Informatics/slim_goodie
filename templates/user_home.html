@@ -6,7 +6,7 @@
     {% set page_title = 'User Home' %}
     <title>{{ page_title }}</title>
     
-    {% set slim_goodie_RCRF_mod = 'user_home' %}
+    {% set slim_goodie_mod = 'user_home' %}
 
     <link rel="stylesheet" type="text/css" href="{{ style.skin_css }}">
     <link rel="stylesheet" type="text/css" href="static/style.css">
@@ -65,7 +65,7 @@
 </head>
 <body>
     
-    {% include 'slim_goodie_RCRF_header.html' %}
+    {% include 'slim_goodie_header.html' %}
 <ul>
     <h1>Welcome, {{ user_data.email }}</h1>
     <ul>

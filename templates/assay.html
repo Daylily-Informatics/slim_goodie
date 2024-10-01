@@ -4,7 +4,7 @@
     {% set page_title = atype.get('type', 'Assay') %}
     <title>{{ atype.get('type', 'Assay') }} </title>
 
-    {% set slim_goodie_RCRF_mod = 'lims' %}
+    {% set slim_goodie_mod = 'lims' %}
 
 
     <link rel="stylesheet" type="text/css" href="{{ style.skin_css }}"  >
@@ -38,7 +38,7 @@
     </style>
 </head>
 <body>
-    {% include 'slim_goodie_RCRF_header.html' %}
+    {% include 'slim_goodie_header.html' %}
 </ul>
 <h1>{{ atype.get('type', 'Assay') }}</h1>
 
