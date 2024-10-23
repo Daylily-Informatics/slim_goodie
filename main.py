@@ -611,10 +611,22 @@ async def user_home(request: Request):
 
 @app.get("/http_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
 async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
-    print(file_path)
-    file_path = file_path.replace('//','/')
-    requested_path = BASE_DIR / file_path.lstrip('/')
-    print('xxxxxx', file_path, requested_path)
+    print('YYYYYYYYY',file_path)
+    
+    #file_path = "/"+ file_path.replace('//','/').lstrip('/').rstrip('/').lstrip('/') 
+    #if file_path == "" or file_path =="//":
+    #    file_path="/"
+
+    if file_path.startswith('/'):
+        file_path = file_path.lstrip('/')
+
+    if  file_path in [None,"","/"]:
+        file_path = ""
+    print('RRRRR',file_path)
+
+        
+    requested_path = BASE_DIR / file_path
+    print('xxxxxx', BASE_DIR, file_path, requested_path)
     logging.info(f"Requested path: {requested_path}")
     
     if not requested_path.exists():
@@ -640,13 +652,7 @@ def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
     Generate an HTML response listing the contents of a directory with alphabetical ordering.
     """
 
-    if len(file_path.split('/')) <= 2:
-        parent_file_path = "/"
-    else:
-        parent_file_path = str("/".join(file_path.split('/')[:2])).rstrip('/')
-    parent_file_path = parent_file_path.rstrip('/')+"/".lstrip('/')
-    
-    parent_path = "/".join(f"/http_serve_endpoint{parent_file_path}/".split("/")[:-2]).rstrip('/') + "/../"
+    parent_path = file_path + "/../.."
     
     # Alphabetical sort for directories and files
     items = sorted(directory.iterdir(), key=lambda x: x.name.lower())
@@ -655,17 +661,17 @@ def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
     for item in items:
         if item.is_dir():
             files.append(
-                f'<li><a href="/http_serve_endpoint/{file_path}/{item.name}/">{item.name}/</a></li>'
+                f'<li><a href="/http_serve_endpoint/{file_path.lstrip('/')}/{item.name}/">{item.name}/</a></li>'
             )
         else:
             files.append(
-                f'<li><a href="/http_serve_endpoint{file_path}/{item.name}">{item.name}</a></li>'
+                f'<li><a href="/http_serve_endpoint/{file_path.lstrip('/')}/{item.name}">{item.name}</a></li>'
             )
-
+    print('PPPPPP', str(parent_path))
     html_content = f"""
     <h2>Directory listing for: {directory.name}</h2>
     <ul>
-        <li><a href="/http_serve_endpoint{parent_file_path}">.. (parent directory)</a></li>
+        <li><a href="/http_serve_endpoint/{parent_path.lstrip('/')}">.. (parent directory)</a></li>
         {''.join(files)}
     </ul>
     """
