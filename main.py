@@ -611,56 +611,65 @@ async def user_home(request: Request):
 
 @app.get("/http_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
 async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
-    requested_path = BASE_DIR / file_path
+    print(file_path)
+    file_path = file_path.replace('//','/')
+    requested_path = BASE_DIR / file_path.lstrip('/')
+    print('xxxxxx', file_path, requested_path)
     logging.info(f"Requested path: {requested_path}")
     
     if not requested_path.exists():
         logging.error(f"File or directory not found: {requested_path}")
         raise HTTPException(status_code=404, detail="File or directory not found")
 
-    # Resolve symlinks to the actual location
     full_path = requested_path.resolve()
-    logging.info(f"Resolved path: {full_path}")
-    
+
     if full_path.is_dir():
-        logging.info(f"Directory path: {full_path}")
         return directory_listing(full_path, file_path)
-    
     elif full_path.is_file():
-        # Render .html files
         if full_path.suffix == '.html':
             with open(full_path, 'r') as f:
                 content = f.read()
             return HTMLResponse(content=content)
-        else:
-            # Prompt for download for other file types
-            return FileResponse(full_path, media_type="application/octet-stream", filename=full_path.name)
+        return FileResponse(full_path, media_type="application/octet-stream", filename=full_path.name)
 
-    logging.error(f"File or directory not found after resolution: {full_path}")
     raise HTTPException(status_code=404, detail="File or directory not found")
+
 
 def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
     """
-    Generate an HTML response listing the contents of a directory, including hidden files and directories.
+    Generate an HTML response listing the contents of a directory with alphabetical ordering.
     """
+
+    if len(file_path.split('/')) <= 2:
+        parent_file_path = "/"
+    else:
+        parent_file_path = str("/".join(file_path.split('/')[:2])).rstrip('/')
+    parent_file_path = parent_file_path.rstrip('/')+"/".lstrip('/')
+    
+    parent_path = "/".join(f"/http_serve_endpoint{parent_file_path}/".split("/")[:-2]).rstrip('/') + "/../"
+    
+    # Alphabetical sort for directories and files
+    items = sorted(directory.iterdir(), key=lambda x: x.name.lower())
+
     files = []
-    for item in directory.iterdir():
+    for item in items:
         if item.is_dir():
-            # Append '/' to directories, including hidden and symbolic link directories
-            files.append(f'<li><a href="/http_serve_endpoint/{file_path}{item.name}/">{item.name}/</a></li>')
+            files.append(
+                f'<li><a href="/http_serve_endpoint/{file_path}/{item.name}/">{item.name}/</a></li>'
+            )
         else:
-            # Show files, including hidden files
-            files.append(f'<li><a href="/http_serve_endpoint/{file_path}/{item.name}">{item.name}</a></li>')
+            files.append(
+                f'<li><a href="/http_serve_endpoint{file_path}/{item.name}">{item.name}</a></li>'
+            )
 
     html_content = f"""
     <h2>Directory listing for: {directory.name}</h2>
     <ul>
+        <li><a href="/http_serve_endpoint{parent_file_path}">.. (parent directory)</a></li>
         {''.join(files)}
     </ul>
     """
     return HTMLResponse(content=html_content)
-
-
 
 # Middleware for checking authentication
 @app.get("/protected_content", response_class=HTMLResponse)
