@@ -609,7 +609,7 @@ async def user_home(request: Request):
     )
     return HTMLResponse(content=content)
 
-@app.get("/http_serve_endpoint/{file_path:path}", response_class=HTMLResponse)
+@app.get("/serve_endpoint/{file_path:path}", response_class=HTMLResponse)
 async def serve_files(file_path: str, request: Request, auth=Depends(require_auth)):
     print('YYYYYYYYY',file_path)
     
@@ -661,17 +661,17 @@ def directory_listing(directory: Path, file_path: str) -> HTMLResponse:
     for item in items:
         if item.is_dir():
             files.append(
-                f'<li><a href="/http_serve_endpoint/{file_path.lstrip('/')}/{item.name}/">{item.name}/</a></li>'
+                f'<li><a href="/serve_endpoint/{file_path.lstrip('/')}/{item.name}/">{item.name}/</a></li>'
             )
         else:
             files.append(
-                f'<li><a href="/http_serve_endpoint/{file_path.lstrip('/')}/{item.name}">{item.name}</a></li>'
+                f'<li><a href="/serve_endpoint/{file_path.lstrip('/')}/{item.name}">{item.name}</a></li>'
             )
     print('PPPPPP', str(parent_path))
     html_content = f"""
     <h2>Directory listing for: {directory.name}</h2>
     <ul>
-        <li><a href="/http_serve_endpoint/{parent_path.lstrip('/')}">.. (parent directory)</a></li>
+        <li><a href="/serve_endpoint/{parent_path.lstrip('/')}">.. (parent directory)</a></li>
         {''.join(files)}
     </ul>
     """
