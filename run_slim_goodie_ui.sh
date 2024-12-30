@@ -2,7 +2,7 @@
 
 # Default values
 host="0.0.0.0"
-port=8912
+port=8913
 mode="dev"
 
 unset HTTP_PROXY
